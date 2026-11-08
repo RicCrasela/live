@@ -10,9 +10,10 @@ RUN npm run build
 
 FROM node:26-alpine3.24 AS runner
 # Patch base OS packages; zlib 1.4-r0 fixes ALPINE-CVE-2026-4738 (1.3.2-r1).
-RUN apk upgrade --no-cache \
- && apk add --no-cache --upgrade 'zlib=1.4-r0' \
- && rm -rf /var/cache/apk/*
+RUN apk update \
+ && apk upgrade \
+ && apk add --upgrade 'zlib=1.4-r0' \
+ && mkdir -p /var/cache/apk
 WORKDIR /app
 ENV NODE_ENV=production \
     PORT=3000 \
