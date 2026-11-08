@@ -1,18 +1,9 @@
 import { randomBytes } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { PROVIDERS, isProviderId } from "@/lib/oauth";
+import { appOrigin, base64url } from "@/lib/url";
 
 export const dynamic = "force-dynamic";
-
-export function base64url(buf: Buffer): string {
-  return buf.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
-
-export function appOrigin(req: NextRequest): string {
-  const proto = req.headers.get("x-forwarded-proto") ?? req.nextUrl.protocol.replace(":", "");
-  const host = req.headers.get("host") ?? req.nextUrl.host;
-  return `${proto}://${host}`;
-}
 
 export async function GET(req: NextRequest, ctx: { params: Promise<{ provider: string }> }) {
   const { provider } = await ctx.params;
