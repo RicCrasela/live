@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+  overscroll-behavior-y: none;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 15% -10%, rgba(254, 44, 85, 0.18), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(37, 244, 238, 0.14), transparent 60%),
+    #07070b;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.feed-scroll {
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.glass {
+  background: rgba(18, 18, 25, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.text-glow {
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.brand-gradient {
+  background-image: linear-gradient(100deg, #fe2c55 0%, #ff5f8f 30%, #25f4ee 65%, #7a5cff 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(254, 44, 85, 0.45);
+}
