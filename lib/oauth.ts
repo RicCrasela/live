@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 export type ProviderId = "google" | "facebook" | "twitter" | "tiktok";
 
 export interface SocialProfile {
@@ -116,13 +118,19 @@ export const PROVIDERS: Record<ProviderId, ProviderConfig> = {
     color: "#0f1419",
     configured: () => Boolean(env("TWITTER_CLIENT_ID") && env("TWITTER_CLIENT_SECRET")),
     buildAuthUrl: ({ state, redirectUri, codeVerifier }) => {
+      const challenge = createHash("sha256")
+        .update(codeVerifier ?? "")
+        .digest("base64")
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
       const params = new URLSearchParams({
         response_type: "code",
         client_id: env("TWITTER_CLIENT_ID") ?? "",
         redirect_uri: redirectUri,
         scope: "users.read tweet.read offline.access",
         state,
-        code_challenge: codeVerifier ?? "challenge",
+        code_challenge: challenge,
         code_challenge_method: "S256",
       });
       return `https://twitter.com/i/oauth2/authorize?${params}`;
