@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
-# VibeLive — Next.js 15 production image (Debian slim, glibc for sharp prebuilds)
-FROM node:26-slim AS builder
-RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+# VibeLive — Next.js 15 production image (Alpine, patched OS packages)
+FROM node:26-alpine3.24 AS builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY package*.json ./
@@ -9,8 +8,11 @@ RUN npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build
 
-FROM node:26-slim AS runner
-RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+FROM node:26-alpine3.24 AS runner
+# Patch base OS packages; zlib 1.4-r0 fixes ALPINE-CVE-2026-4738 (1.3.2-r1).
+RUN apk upgrade --no-cache \
+ && apk add --no-cache --upgrade 'zlib=1.4-r0' \
+ && rm -rf /var/cache/apk/*
 WORKDIR /app
 ENV NODE_ENV=production \
     PORT=3000 \
